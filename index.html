@@ -704,6 +704,10 @@
   </style>
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 </head>
 <body>
   <!-- Splash Screen / Opening Animation -->
@@ -746,10 +750,12 @@
         <ul class="navbar-nav ms-auto">
           <li class="nav-item"><a class="nav-link" href="#destinasi">Destinasi</a></li>
           <li class="nav-item"><a class="nav-link" href="#kuliner">Kuliner</a></li>
+          <li class="nav-item"><a class="nav-link" href="#galeri">Galeri</a></li>
           <li class="nav-item"><a class="nav-link" href="#events">Event</a></li>
           <li class="nav-item"><a class="nav-link" href="#reviews">Review</a></li>
           <li class="nav-item"><a class="nav-link" href="#travel-tips">Tips</a></li>
           <li class="nav-item"><a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#kameraModal">Scanner</a></li>
+          <li class="nav-item"><a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#aiAssistantModal">🤖 AI Assistant</a></li>
           <li class="nav-item"><a class="nav-link" href="#kontak">Kontak</a></li>
         </ul>
       </div>
@@ -998,6 +1004,49 @@
       </div>
     </div>
   </section>
+
+  <!-- Galeri -->
+  <section id="galeri" class="py-5">
+    <div class="container">
+      <h2 class="text-center mb-4">Galeri</h2>
+      <div class="row g-4">
+        <div class="col-md-4">
+          <img src="lawang sewu.jpg" alt="Lawang Sewu" class="img-fluid">
+        </div>
+        <div class="col-md-4">
+          <img src="sam poo kong.jpg" alt="Sam Poo Kong" class="img-fluid">
+        </div>
+        <div class="col-md-4">
+          <img src="pantai marina.jpeg" alt="Pantai Marina" class="img-fluid">
+        </div>
+        <div class="col-md-4">
+          <img src="kota lama.jpg" alt="Kota Lama" class="img-fluid">
+        </div>
+        <div class="col-md-4">
+          <video controls class="img-fluid">
+            <source src="kotalam2.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+        <div class="col-md-4">
+          <img src="akpol.jpg" alt="Akademi Kepolisian" class="img-fluid">
+        </div>
+        <div class="col-md-4">
+          <img src="Dusun semilir.webp" alt="Dusun Semilir" class="img-fluid">
+        </div>
+        <div class="col-md-4">
+          <img src="cimory semarang.jpg" alt="Cimory" class="img-fluid">
+        </div>
+        <div class="col-md-4">
+          <img src="saloka semarang.jpg" alt="Saloka" class="img-fluid">
+        </div>
+        <div class="col-md-4">
+          <img src="desa pelangi.jpg" alt="Kampung Pelangi" class="img-fluid">
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- Visitor Tools: Weather + Directions -->
   <section id="visitor-tools" class="py-5">
     <div class="container">
@@ -1384,8 +1433,33 @@
     </div>
   </div>
 
+  <!-- AI Assistant Modal -->
+  <div class="modal fade" id="aiAssistantModal" tabindex="-1" aria-labelledby="aiAssistantModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="aiAssistantModalLabel">🤖 AI Assistant Semarang Tour</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+        </div>
+        <div class="modal-body">
+          <div id="ai-chat-container" style="height: 400px; overflow-y: auto; border: 1px solid #ddd; padding: 10px; margin-bottom: 10px;">
+            <div class="ai-message bot">
+              <strong>AI Assistant:</strong> Halo! Saya adalah asisten AI untuk membantu Anda menjelajahi Semarang. Apa yang ingin Anda ketahui tentang destinasi wisata, kuliner, atau tips perjalanan?
+            </div>
+          </div>
+          <div class="input-group">
+            <input type="text" id="ai-input" class="form-control" placeholder="Tanyakan sesuatu tentang Semarang...">
+            <button class="btn btn-primary" onclick="sendAiMessage()">Kirim</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
     // Hide splash screen after animation completes
     window.addEventListener('load', function(){
@@ -1971,6 +2045,122 @@ END:VCALENDAR`;
       item.addEventListener('mouseleave', function() {
         this.style.transform = 'translateX(0)';
       });
+    });
+
+    // ===== AI TRAVEL ASSISTANT =====
+
+    // AI Response Generator
+    function generateAiResponse(message) {
+      const lower = message.toLowerCase();
+
+      // Responses based on keywords
+      if (lower.includes('lawang sewu')) {
+        return 'Lawang Sewu adalah ikon sejarah Semarang, bekas kantor NIS dengan arsitektur Belanda. Tiket masuk sekitar Rp 20.000. Buka setiap hari 08:00-16:00. Jangan lewatkan tur malam hari!';
+      }
+
+      if (lower.includes('sam poo kong')) {
+        return 'Sam Poo Kong adalah kelenteng tua di Semarang yang menyimpan sejarah Laksamana Cheng Ho. Lokasi strategis di dekat pelabuhan. Cocok untuk wisata budaya dan sejarah.';
+      }
+
+      if (lower.includes('pantai marina')) {
+        return 'Pantai Marina adalah pantai rekreasi modern di Semarang dengan anjungan, taman, dan wahana air. Pemandangan sunset indah. Tiket masuk gratis, tapi parkir berbayar.';
+      }
+
+      if (lower.includes('kota lama')) {
+        return 'Kota Lama Semarang adalah kawasan bersejarah dengan bangunan kolonial Belanda. Jalan-jalan sambil menikmati arsitektur tua dan kafe-kafe unik. Pasar malam setiap Jumat!';
+      }
+
+      if (lower.includes('kuliner') || lower.includes('makan') || lower.includes('lumpia')) {
+        return 'Kuliner khas Semarang: Lumpia Semarang (isi rebung & ayam), Tahu Gimbal (tahu dengan sambal), Soto Bangkong (soto ayam), Wingko Babat (kue tradisional). Coba di warung lokal untuk cita rasa autentik!';
+      }
+
+      if (lower.includes('dusun semilir')) {
+        return 'Dusun Semilir di Bawen adalah taman hiburan terpadu dengan wahana, kuliner, dan penginapan. Cocok untuk keluarga. Buka 09:00-17:00, tiket masuk Rp 25.000-50.000.';
+      }
+
+      if (lower.includes('cimory')) {
+        return 'Cimory di Ungaran menawarkan wisata agro dengan tur pabrik yogurt dan produk susu. Ada playground dan area makan. Buka 08:00-16:00, tiket masuk Rp 15.000.';
+      }
+
+      if (lower.includes('saloka')) {
+        return 'Saloka Theme Park adalah taman hiburan dengan wahana air dan darat bertema rawa pening. Ada hotel dan kuliner. Tiket masuk Rp 50.000-100.000 tergantung hari.';
+      }
+
+      if (lower.includes('kampung pelangi')) {
+        return 'Kampung Pelangi adalah kampung wisata dengan rumah-rumah berwarna-warni. Lokasi di Semarang Barat. Tiket masuk Rp 10.000, cocok untuk foto-foto Instagramable.';
+      }
+
+      if (lower.includes('akpol')) {
+        return 'Akademi Kepolisian Semarang adalah kampus pendidikan polisi. Wisata terbatas, tapi arsitektur menarik. Buka untuk umum dengan izin.';
+      }
+
+      if (lower.includes('cuaca') || lower.includes('weather')) {
+        return 'Cuaca Semarang tropis dengan suhu 27-32°C sepanjang tahun. Musim kemarau April-September, hujan Oktober-Maret. Bawa payung dan sunscreen!';
+      }
+
+      if (lower.includes('transportasi') || lower.includes('mobil') || lower.includes('kereta')) {
+        return 'Transportasi: Gunakan Gojek/Grab untuk ojek/taksi. Sewa mobil di rental. Stasiun Tawang untuk kereta antar kota. Bandara Ahmad Yani untuk domestik.';
+      }
+
+      if (lower.includes('akomodasi') || lower.includes('hotel')) {
+        return 'Akomodasi: Hotel seperti Ibis, Novotel, atau budget seperti RedDoorz. Hostel di sekitar Kota Lama. Booking via Traveloka/Agoda lebih hemat.';
+      }
+
+      if (lower.includes('event') || lower.includes('acara') || lower.includes('festival')) {
+        return 'Event menarik: Festival Semarang (Mei), Pasar Malam Kota Lama (setiap Jumat), Workshop Batik (April), Jogging Pantai Marina (Minggu pagi).';
+      }
+
+      if (lower.includes('tips') || lower.includes('panduan') || lower.includes('saran')) {
+        return 'Tips wisata: Kunjungi pagi hari, bawa air mineral, coba kuliner lokal, hormati adat istiadat, gunakan sunscreen. Waktu terbaik April-Mei atau September-Oktober.';
+      }
+
+      if (lower.includes('budget') || lower.includes('biaya')) {
+        return 'Budget wisata: Rp 500K-1JT per hari (makan, transport, tiket). Hemat dengan makan di warung, gunakan transport umum.';
+      }
+
+      if (lower.includes('waktu terbaik') || lower.includes('musim')) {
+        return 'Waktu terbaik: April-Mei (kering, sejuk) atau September-Oktober. Hindari Januari-Februari (hujan lebat).';
+      }
+
+      if (lower.includes('halo') || lower.includes('hi') || lower.includes('hai')) {
+        return 'Halo! Saya AI Assistant untuk wisata Semarang. Apa yang ingin Anda ketahui? Destinasi, kuliner, tips perjalanan?';
+      }
+
+      if (lower.includes('terima kasih') || lower.includes('thanks')) {
+        return 'Sama-sama! Selamat menikmati wisata di Semarang. Jika ada pertanyaan lagi, saya siap membantu! 😊';
+      }
+
+      // Default response
+      return 'Maaf, saya belum paham pertanyaan Anda. Coba tanyakan tentang destinasi seperti Lawang Sewu, kuliner khas, tips wisata, atau event di Semarang!';
+    }
+
+    // Send AI Message Function
+    window.sendAiMessage = function() {
+      const input = document.getElementById('ai-input');
+      const message = input.value.trim();
+      if (!message) return;
+
+      // Add user message
+      const chatContainer = document.getElementById('ai-chat-container');
+      chatContainer.innerHTML += `<div class="ai-message user"><strong>Anda:</strong> ${message}</div>`;
+      input.value = '';
+
+      // Scroll to bottom
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+
+      // Simulate typing delay
+      setTimeout(() => {
+        const response = generateAiResponse(message);
+        chatContainer.innerHTML += `<div class="ai-message bot"><strong>AI Assistant:</strong> ${response}</div>`;
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+      }, 500 + Math.random() * 1000); // Random delay 0.5-1.5s
+    };
+
+    // Allow Enter key to send message
+    document.getElementById('ai-input').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        sendAiMessage();
+      }
     });
   </script>
   <!-- Music Player Script -->
